@@ -1,0 +1,61 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Catalogo de Bandas Desenhadas</h2>
+</div>
+
+{% if user.is_authenticated %}
+    <div class="mb-3">
+        <a href="{% url 'product_add' %}" class="btn btn-success">+ Adicionar Nova BD</a>
+    </div>
+{% endif %}
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-10">
+        <input type="text" name="q" class="form-control" placeholder="Pesquisar banda desenhada por titulo..." value="{{ request.GET.q }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+    </div>
+</form>
+
+<div class="row">
+    {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.title }}" style="height: 300px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text text-muted mb-1">Categoria: {{ product.category.name }}</p>
+                    <p class="card-text fw-bold text-primary mb-3">{{ product.price }}€</p>
+                    
+                    <div>
+                        {% if product.in_stock %}
+                            <span class="badge bg-success mb-2">Em Stock ({{ product.stock }})</span>
+                        {% else %}
+                            <span class="badge bg-danger mb-2">Esgotado</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto pt-3 border-top">
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-sm btn-success text-light fw-bold">Comprar</a>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-info text-light">Detalhes</a>
+                        
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'product_edit' product.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm btn-danger">Apagar</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">Nenhum produto disponivel no catalogo neste momento.</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

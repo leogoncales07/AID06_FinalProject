@@ -1,0 +1,19 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-6">
+<div class="card border-danger shadow-sm p-4 rounded-3">
+<h3 class="text-danger mb-3">Tem a certeza?</h3>
+<p>Esta acao ira apagar permanentemente a banda desenhada <strong>{{ object.title }}</strong> do sistema. Esta acao nao pode ser desfeita.</p>
+<form method="post">
+{% csrf_token %}
+<div class="mt-4 d-flex gap-2">
+<button type="submit" class="btn btn-danger">Sim, Apagar Definitivamente</button>
+<a href="{% url 'product_list' %}" class="btn btn-secondary">Cancelar</a>
+</div>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}

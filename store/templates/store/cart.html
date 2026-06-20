@@ -1,0 +1,42 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row">
+<div class="col-md-8 offset-md-2">
+<div class="card shadow-sm p-4 border-0 rounded-3">
+<h2 class="mb-4">O Seu Carrinho</h2>
+<table class="table table-hover align-middle">
+<thead class="table-dark">
+<tr>
+<th>Produto</th>
+<th>Preco</th>
+<th>Quantidade</th>
+<th>Subtotal</th>
+</tr>
+</thead>
+<tbody>
+{% for item in cart_items %}
+<tr>
+<td><strong>{{ item.product.title }}</strong></td>
+<td>{{ item.price }}</td>
+<td>{{ item.quantity }}</td>
+<td>{{ item.subtotal }}</td>
+</tr>
+{% empty %}
+<tr>
+<td colspan="4" class="text-center py-4 text-muted">O seu carrinho esta atualmente vazio.</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+<h4 class="fw-bold mb-0">Total da Encomenda: {{ total_amount }}</h4>
+<div>
+<a href="{% url 'clear_cart' %}" class="btn btn-outline-danger me-2">Limpar Carrinho</a>
+<a href="{% url 'checkout' %}" class="btn btn-success">Finalizar Compra</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+<div class="col-12">
+<h2 class="fw-bold">Painel de Gestao da Loja</h2>
+<p class="text-muted">Bem-vindo a zona de administracao. Escolha uma das operacoes abaixo.</p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6 mb-4">
+<div class="card shadow-sm border-0 bg-primary text-white h-100 p-3 rounded-3">
+<div class="card-body d-flex flex-column">
+<h3 class="card-title fw-bold">Gestao de Produtos</h3>
+<p class="card-text mb-4">Aceda ao catalogo completo para editar precos, ajustar stock ou eliminar registos antigos.</p>
+<div class="mt-auto">
+<a href="{% url 'admin_product_list' %}" class="btn btn-light fw-bold">Ver Catalogo Interno</a>
+<a href="{% url 'product_add' %}" class="btn btn-outline-light ms-2">Novo Produto</a>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-6 mb-4">
+<div class="card shadow-sm border-0 bg-success text-white h-100 p-3 rounded-3">
+<div class="card-body d-flex flex-column">
+<h3 class="card-title fw-bold">Gestao de Encomendas</h3>
+<p class="card-text mb-4">Consulte o historico de compras dos clientes e altere os estados de pagamento e envio.</p>
+<div class="mt-auto">
+<a href="{% url 'admin_order_list' %}" class="btn btn-light fw-bold">Lista de Encomendas</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
