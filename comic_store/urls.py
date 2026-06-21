@@ -19,6 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Esta é a linha NOVA que ativa o Login e Logout nativos do Django
+    path('accounts/', include('django.contrib.auth.urls')), 
+    
+    # Esta é a linha que liga a tua aplicação da loja (já a tinhas)
     path('', include('store.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
 ]
