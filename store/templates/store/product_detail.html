@@ -83,11 +83,15 @@
 <div class="detail-card">
     <div class="row g-0">
         <div class="col-md-5">
-            <div class="detail-img-placeholder">
-                <i class="bi bi-book text-white opacity-50 mb-3" style="font-size: 4rem;"></i>
-                <h2 class="h3 fw-bold">{{ product.title }}</h2>
-                <p class="opacity-75 mt-2">Capa Oficial</p>
-            </div>
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.title }}" class="w-100 h-100" style="min-height: 500px; object-fit: cover;">
+            {% else %}
+                <div class="detail-img-placeholder">
+                    <i class="bi bi-book text-white opacity-50 mb-3" style="font-size: 4rem;"></i>
+                    <h2 class="h3 fw-bold">{{ product.title }}</h2>
+                    <p class="opacity-75 mt-2">Capa Oficial</p>
+                </div>
+            {% endif %}
         </div>
         
         <div class="col-md-7">

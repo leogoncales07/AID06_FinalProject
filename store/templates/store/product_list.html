@@ -210,10 +210,14 @@
                     <div class="col">
                         <div class="comic-card {% if product.stock <= 0 %}out-of-stock{% endif %}">
                             <a href="{% url 'product_detail' product.id %}" class="comic-img-wrapper d-block text-decoration-none">
-                                <!-- Como não temos campo de imagem no model original, usamos um placeholder premium gerado por CSS -->
-                                <div class="comic-placeholder">
-                                    {{ product.title|truncatechars:20 }}
-                                </div>
+                                {% if product.image_url %}
+                                    <img src="{{ product.image_url }}" alt="{{ product.title }}" class="comic-img">
+                                {% else %}
+                                    <!-- Como não temos campo de imagem no model original, usamos um placeholder premium gerado por CSS -->
+                                    <div class="comic-placeholder">
+                                        {{ product.title|truncatechars:20 }}
+                                    </div>
+                                {% endif %}
                             </a>
                             
                             <div class="comic-body">
