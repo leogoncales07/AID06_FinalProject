@@ -1,42 +1,176 @@
-{% extends 'store/base.html' %}
+{% extends 'base_store.html' %}
+
+{% block title %}Carrinho de Compras - Comic Store{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+    }
+
+    .cart-table th {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        border-bottom-width: 2px;
+    }
+
+    .cart-table td {
+        vertical-align: middle;
+        padding: 1.5rem 0.5rem;
+    }
+
+    .summary-card {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        position: sticky;
+        top: 90px;
+    }
+
+    .summary-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 1rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .summary-total {
+        font-size: 1.5rem;
+        font-weight: 800;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn-checkout {
+        background-color: var(--accent-color);
+        color: white;
+        font-weight: 700;
+        border: none;
+        padding: 1rem;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.2s;
+    }
+
+    .btn-checkout:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-<div class="col-md-8 offset-md-2">
-<div class="card shadow-sm p-4 border-0 rounded-3">
-<h2 class="mb-4">O Seu Carrinho</h2>
-<table class="table table-hover align-middle">
-<thead class="table-dark">
-<tr>
-<th>Produto</th>
-<th>Preco</th>
-<th>Quantidade</th>
-<th>Subtotal</th>
-</tr>
-</thead>
-<tbody>
-{% for item in cart_items %}
-<tr>
-<td><strong>{{ item.product.title }}</strong></td>
-<td>{{ item.price }}</td>
-<td>{{ item.quantity }}</td>
-<td>{{ item.subtotal }}</td>
-</tr>
-{% empty %}
-<tr>
-<td colspan="4" class="text-center py-4 text-muted">O seu carrinho esta atualmente vazio.</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-<h4 class="fw-bold mb-0">Total da Encomenda: {{ total_amount }}</h4>
-<div>
-<a href="{% url 'clear_cart' %}" class="btn btn-outline-danger me-2">Limpar Carrinho</a>
-<a href="{% url 'checkout' %}" class="btn btn-success">Finalizar Compra</a>
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h2 fw-bold text-dark mb-0">O Teu Carrinho</h1>
+    {% if cart_items %}
+        <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger btn-sm fw-medium">
+            <i class="bi bi-trash"></i> Esvaziar Carrinho
+        </a>
+    {% endif %}
 </div>
-</div>
-</div>
-</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="cart-card h-100">
+            {% if cart_items %}
+                <div class="table-responsive">
+                    <table class="table cart-table mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th class="text-center">Preço Un.</th>
+                                <th class="text-center">Quantidade</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 80px;">
+                                            <i class="bi bi-image text-muted"></i>
+                                        </div>
+                                        <a href="{% url 'product_detail' item.product_id %}" class="fw-bold text-dark text-decoration-none">
+                                            {{ item.title }}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="text-center fw-medium">{{ item.price }} €</td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border px-3 py-2 fs-6">{{ item.quantity }}</span>
+                                </td>
+                                <td class="text-end fw-bold text-primary">{{ item.subtotal|floatformat:2 }} €</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-cart-x text-muted mb-3" style="font-size: 4rem;"></i>
+                    <h3 class="fw-bold">O carrinho está vazio</h3>
+                    <p class="text-muted mb-4">Ainda não escolheste nenhuma banda desenhada.</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-primary-custom">
+                        Explorar Catálogo
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="summary-card">
+            <h3 class="summary-title">Resumo da Compra</h3>
+            
+            <div class="summary-row text-light opacity-75">
+                <span>Subtotal</span>
+                <span>{{ total|floatformat:2 }} €</span>
+            </div>
+            <div class="summary-row text-light opacity-75">
+                <span>Portes (Standard)</span>
+                <span>Grátis</span>
+            </div>
+            
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>{{ total|floatformat:2 }} €</span>
+            </div>
+
+            <div class="mt-4">
+                {% if cart_items %}
+                    <form action="{% url 'checkout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-checkout fs-5">
+                            <i class="bi bi-credit-card me-2"></i> Finalizar Compra
+                        </button>
+                    </form>
+                    <p class="text-center mt-3 mb-0 small opacity-75">
+                        <i class="bi bi-shield-lock me-1"></i> Pagamento Seguro
+                    </p>
+                {% else %}
+                    <button class="btn-checkout fs-5 opacity-50" disabled>
+                        Finalizar Compra
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

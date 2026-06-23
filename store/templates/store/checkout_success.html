@@ -1,0 +1,64 @@
+{% extends 'base_store.html' %}
+
+{% block title %}Compra Finalizada - Comic Store{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        padding: 4rem 2rem;
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        color: #10b981;
+        margin-bottom: 1.5rem;
+    }
+
+    .order-details {
+        background: var(--bg-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-card">
+    <i class="bi bi-check-circle-fill success-icon"></i>
+    <h1 class="h2 fw-bold text-dark mb-3">Compra Confirmada!</h1>
+    <p class="text-muted fs-5">Obrigado pela tua preferência. A tua encomenda foi processada com sucesso.</p>
+
+    <div class="order-details">
+        <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted fw-medium">Número da Encomenda</span>
+            <span class="fw-bold text-dark">#{{ order.id|stringformat:"05d" }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted fw-medium">Data</span>
+            <span class="fw-bold text-dark">{{ order.created_at|date:"d M Y" }}</span>
+        </div>
+        <div class="d-flex justify-content-between pt-2 mt-2 border-top">
+            <span class="text-muted fw-medium">Total Pago</span>
+            <span class="fw-bold text-primary fs-5">{{ order.total_amount }} €</span>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 justify-content-center">
+        <a href="{% url 'order_history' %}" class="btn btn-outline-custom">
+            <i class="bi bi-receipt me-1"></i> Ver Fatura
+        </a>
+        <a href="{% url 'product_list' %}" class="btn btn-primary-custom">
+            <i class="bi bi-bag me-1"></i> Continuar a Comprar
+        </a>
+    </div>
+</div>
+{% endblock %}

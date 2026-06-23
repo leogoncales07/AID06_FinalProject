@@ -1,0 +1,167 @@
+{% extends 'base_store.html' %}
+
+{% block title %}Histórico de Encomendas - Comic Store{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .history-header {
+        background-color: var(--bg-color);
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .order-id {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .order-date {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .order-status {
+        background-color: #dcfce7;
+        color: #166534;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .history-body {
+        padding: 1.5rem;
+    }
+
+    .item-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px dashed var(--border-color);
+    }
+
+    .item-row:last-child {
+        border-bottom: none;
+    }
+
+    .item-title {
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .item-qty {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .history-footer {
+        background-color: var(--bg-color);
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .total-paid {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="h2 fw-bold text-dark mb-2">Histórico de Compras</h1>
+    <p class="text-muted">Consulta todas as faturas das tuas encomendas anteriores.</p>
+</div>
+
+{% if orders %}
+    <div class="row">
+        <div class="col-lg-8">
+            {% for order in orders %}
+                <div class="history-card">
+                    <div class="history-header">
+                        <div>
+                            <div class="order-id">Encomenda #{{ order.id|stringformat:"05d" }}</div>
+                            <div class="order-date">{{ order.created_at|date:"d M Y, H:i" }}</div>
+                        </div>
+                        <div class="order-status">
+                            <i class="bi bi-check2-all"></i> Pago
+                        </div>
+                    </div>
+                    
+                    <div class="history-body">
+                        <ul class="item-list">
+                            {% for item in order.items.all %}
+                                <li class="item-row">
+                                    <div>
+                                        <div class="item-title">{{ item.product.title }}</div>
+                                        <div class="item-qty">Qtd: {{ item.quantity }} &times; {{ item.price_at_purchase }} €</div>
+                                    </div>
+                                    <div class="item-price">
+                                        <!-- No template custom filter needs doing manually, simplify math inline or just show item price -->
+                                        {{ item.price_at_purchase }} € un.
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="history-footer">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-muted fw-medium">Total:</span>
+                            <span class="total-paid">{{ order.total_amount }} €</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="bg-white p-4 rounded-3 border">
+                <h4 class="fw-bold mb-3 h5">Precisa de Ajuda?</h4>
+                <p class="text-muted small">Se tiver alguma questão relacionada com as suas faturas ou encomendas, entre em contacto com o suporte.</p>
+                <a href="#" class="btn btn-outline-custom btn-sm w-100 mt-2">Contactar Suporte</a>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="text-center py-5 bg-white rounded-3 border">
+        <i class="bi bi-receipt text-muted mb-3" style="font-size: 4rem;"></i>
+        <h3 class="fw-bold">Sem Encomendas</h3>
+        <p class="text-muted mb-4">Ainda não realizaste nenhuma compra connosco.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary-custom">
+            Explorar Catálogo
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
